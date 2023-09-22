@@ -25,4 +25,12 @@ foreach ($records as $offset => $record) {
 	$results[$clean_name]['count']++;
 }
 
+uasort($results, function($a, $b) {
+	if ($a['count'] == $b['count']) {
+		return 0;
+	}
+
+	return $a['count'] > $b['count'] ? -1 : 1;
+});
+
 echo '<pre>' . print_r($results, true) . '</pre>';
