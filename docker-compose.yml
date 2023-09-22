@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  # PHP + Apache Service
+  web:
+    image: php:8.1-apache
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - sb
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: sb_test_local
+      
+  # MySQL Service
+  db:
+    image: mysql:8.1
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - sb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+networks:
+  sb:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
