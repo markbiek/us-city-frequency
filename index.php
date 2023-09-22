@@ -12,7 +12,9 @@ $header = $csv->getHeader();
 $results = [];
 
 $records = $csv->getRecords();
+$cities = [];
 foreach ($records as $offset => $record) {
+	$cities[] = $record['city_ascii'];
 	$clean_name = preg_replace('/[^A-Za-z0-9]/', '', $record['city_ascii']);
 
 	if ( ! isset($results[$clean_name])) {
@@ -33,4 +35,14 @@ uasort($results, function($a, $b) {
 	return $a['count'] > $b['count'] ? -1 : 1;
 });
 
-echo '<pre>' . print_r($results, true) . '</pre>';
+$unique_cities = array_filter($results, function($city) {
+	return $city['count'] === 1;
+});
+
+$unique_city_count = count($unique_cities);
+$total_city_count = count($cities);
+
+
+echo "Total cities: $total_city_count<br />";
+echo "Unique cities: $unique_city_count<br />";
+echo "Percent unique: " . round($unique_city_count / $total_city_count * 100, 2) . "%<br />";
