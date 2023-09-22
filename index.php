@@ -25,4 +25,4 @@ foreach ($records as $offset => $record) {
 	$results[$clean_name]['count']++;
 }
 
-echo '<pre>' . print_r($results) . '</pre>';
+echo '<pre>' . print_r($results, true) . '</pre>';
