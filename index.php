@@ -35,6 +35,10 @@ uasort($results, function($a, $b) {
 	return $a['count'] > $b['count'] ? -1 : 1;
 });
 
+$common_cities = array_filter($results, function($city) {
+	return $city['count'] >= 15;
+});
+
 $unique_cities = array_filter($results, function($city) {
 	return $city['count'] === 1;
 });
@@ -42,7 +46,11 @@ $unique_cities = array_filter($results, function($city) {
 $unique_city_count = count($unique_cities);
 $total_city_count = count($cities);
 
-
 echo "Total cities: $total_city_count<br />";
 echo "Unique cities: $unique_city_count<br />";
 echo "Percent unique: " . round($unique_city_count / $total_city_count * 100, 2) . "%<br />";
+
+echo "<br />Common cities:<br />";
+foreach ($common_cities as $city) {
+	echo $city['name'] . ' (' . $city['count'] . ')<br />';
+}
