@@ -13,6 +13,8 @@ $results = [];
 
 $records = $csv->getRecords();
 $cities = [];
+$min_pop = null;
+$max_pop = null;
 foreach ($records as $offset => $record) {
 	$cities[] = $record['city_ascii'];
 	$clean_name = preg_replace('/[^A-Za-z0-9]/', '', $record['city_ascii']);
@@ -25,6 +27,14 @@ foreach ($records as $offset => $record) {
 	}
 
 	$results[$clean_name]['count']++;
+
+	if (! $min_pop || ($record['population'] < $min_pop['population'] && $record['population'] > 0)) {
+		$min_pop = $record;
+	}
+
+	if (! $max_pop || $record['population'] > $max_pop['population']) {
+		$max_pop = $record;
+	}
 }
 
 uasort($results, function($a, $b) {
@@ -48,7 +58,10 @@ $total_city_count = count($cities);
 
 echo "Total cities: $total_city_count<br />";
 echo "Unique cities: $unique_city_count<br />";
-echo "Percent unique: " . round($unique_city_count / $total_city_count * 100, 2) . "%<br />";
+echo "Percent unique: " . round($unique_city_count / $total_city_count * 100, 2) . "%<br /><br />";
+
+echo "Largest population: {$max_pop['city_ascii']}, {$max_pop['state_id']} &mdash; " . number_format($max_pop['population']) . "<br />";
+echo "Smallest population: {$min_pop['city_ascii']}, {$min_pop['state_id']} &mdash; " . number_format($min_pop['population']) . "<br />";
 
 echo "<br />Common cities:<br />";
 foreach ($common_cities as $city) {
